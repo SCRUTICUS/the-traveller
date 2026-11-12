@@ -3,6 +3,7 @@ const scenes = [...document.querySelectorAll('.hero-view')];
 let active = 0;
 function changeScene(step) {
   active = (active + step + scenes.length) % scenes.length;
+  document.querySelector('[data-hero-book]').href = config.booking + '?world=' + config.worlds[active];
   scenes[active].style.backgroundImage = 'url("' + scenes[active].dataset.src + '")';
   scenes.forEach((view, index) => view.classList.toggle('active', index === active));
   document.querySelector('[data-name]').textContent = config.names[active];
@@ -76,6 +77,7 @@ function selectFace(i){
   const nearest=Math.round(-angle/step);
   const delta=((i-nearest)%3+3)%3;
   target=-(nearest+(delta===2?-1:delta))*step;
+  model.querySelector('[data-model-book]').href = config.booking + '?world=' + config.worlds[i];
   model.querySelector('[data-model-name]').textContent=config.names[i];
   model.querySelector('[data-model-feel]').textContent=config.senses[i];
   buttons.forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j))); schedule();
