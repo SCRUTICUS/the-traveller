@@ -1,0 +1,7 @@
+---
+import Booking from '../components/Booking.astro';
+export function getStaticPaths(){
+ return [{params:{booking:'boeken'},props:{lang:'nl'}},{params:{booking:'en/book'},props:{lang:'en'}},{params:{booking:'fr/reserver'},props:{lang:'fr'}}];
+}
+---
+<Booking lang={Astro.props.lang}/>

@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from './Icon.astro';
+import { content, worlds, cities, heroes, route, assets } from '../lib/copy.js';
+const {lang}=Astro.props, t=content[lang], booking=route(lang,'book');
+---
+<Base lang={lang}><main id="main">
+<section class="hero" aria-labelledby="hero-title" data-hero>
+<div class="hero-views" aria-hidden="true">{heroes.map((file,i)=><div class:list={['hero-view',{active:i===0}]} data-src={assets(file)} style={i===0 ? 'background-image:url('+assets(file)+')' : undefined}></div>)}</div><div class="shade"></div>
+<div class="wrap hero-wrap"><div class="hero-copy">
+<div class="eyebrow hero-label"><i></i>{t.label}</div><h1 id="hero-title">{t.title[0]}<br/><em>{t.title[1]}</em></h1>
+<p>{t.intro}</p><div class="hero-actions"><a class="pill primary" href={booking}>{t.book} <Icon name="diagonal" size={17}/></a><a class="hero-secondary" href="#destinations">{t.explore}<Icon name="down" size={16}/></a></div>
+</div><div class="hero-bottom">
+<a class="hero-scroll" href="#destinations" aria-label={t.explore}><Icon name="down" size={17}/></a>
+<div class="scene-panel" aria-live="polite"><div class="scene-data"><span class="scene-label">{t.scene} <b data-count>01 / 03</b></span><span class="scene-title" data-name>{t.names[0]}</span></div><div class="round-controls"><button data-prev aria-label={t.prev}><Icon name="left" size={16}/></button><button data-next aria-label={t.slide}><Icon name="right" size={16}/></button></div></div>
+</div></div></section>
+<section id="destinations" class="destinations section"><div class="wrap"><div class="eyebrow"><i></i>{t.places}</div><div class="sec-heading"><h2>{t.where} <em>{t.whereEm}</em></h2><p>{t.chooser}</p></div>
+<div class="worlds">{worlds.map((w,i)=><a class="world-card" href={booking+'?world='+w} aria-label={t.pick+' · '+t.names[i]}><div class="world-photo"><img src={assets(w+'.jpg')} alt="" loading="lazy"/><div class="photo-shade"></div><span class="terrain"><Icon name={['mountain','leaf','mountain'][i]} size={14}/>{t.terrain[i]}</span><span class="world-text"><small>{t.regions[i]}</small><strong>{t.names[i]}</strong></span><span class="card-arrow"><Icon name="diagonal" size={18}/></span></div><p>{t.descriptions[i]}</p></a>)}</div></div></section>
+<section id="experience" class="section experience"><div class="wrap"><div class="eyebrow"><i></i>{t.experience}</div><div class="sec-heading"><h2>{t.inside} <em>{t.insideEm}</em></h2><p>{t.how}</p></div>
+<div class="model-wrap" data-model><div class="model-stage"><canvas aria-label={t.model} role="img"></canvas></div><div class="model-caption"><span class="eyebrow">{t.destination}</span><strong data-model-name>{t.names[0]}</strong><p data-model-feel>{t.sensations[0]}</p><div class="model-tabs">{worlds.map((w,i)=><button type="button" aria-label={t.names[i]} aria-pressed={i===0?'true':'false'} data-index={i}><img src={assets(w+'.jpg')} alt="" loading="lazy"/></button>)}</div></div></div>
+<div class="inside-row"><img src={assets('interior.jpg')} loading="lazy" alt={t.steps[1][1]}/><ol>{t.steps.map(([title,body],i)=><li><span>0{i+1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></div>
+</div></section>
+<section id="locations" class="section locations"><div class="wrap"><div class="eyebrow"><i></i>{t.popups}</div><div class="sec-heading"><h2>{t.nearby} <em>{t.nearbyEm}</em></h2><p>{t.locIntro}</p></div>
+<div class="cities">{cities.map((city,i)=><a href={booking+'?city='+city} aria-label={t.cityLink+' '+t.citiesLabel[i]}><Icon name="pin"/><span>{t.citiesLabel[i]}</span><Icon name="diagonal"/></a>)}</div></div></section>
+<script id="scene-config" type="application/json" set:html={JSON.stringify({names:t.names,senses:t.sensations,textures:worlds.map(w=>assets(w+'.jpg'))})}/>
+<script>import '../lib/home.js';</script>
+</main></Base>
