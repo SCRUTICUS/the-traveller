@@ -15,7 +15,7 @@ const languageNames={nl:'Nederlands',en:'English',fr:'Français'};
 const title=page==='home' ? 'The Traveller — '+t.label : t.book+' · The Traveller';
 ---
 <!doctype html>
-<html lang={lang}><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#141510"/><meta name="description" content={page === 'home' ? t.intro : t.demoNotice}/><link rel="icon" href={assets('favicon.svg')}/><title>{title}</title>
+<html lang={lang}><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#141510"/><meta name="description" content={page === 'home' ? t.intro : t.demoNotice}/><link rel="icon" href={assets('favicon.svg')+'?v=dodecahedron'}/><title>{title}</title>
 {locales.map(l=><link rel="alternate" hreflang={l} href={new URL(route(l,page),Astro.site)}/>)}
 <script is:inline define:vars={{pageLanguage:lang,dutchPath:route('nl',page)}}>
   // A direct visit in a new tab starts in Dutch. A deliberate language choice

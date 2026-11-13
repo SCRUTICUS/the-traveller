@@ -25,7 +25,7 @@ html,body{background:var(--night);color:var(--bone)}
 .origin{position:absolute;bottom:5%;right:var(--gutter);font-size:11px;letter-spacing:.1em;color:#d8dfcb}
 .scene-anchor{position:absolute;left:0;width:1px;height:1px;pointer-events:none}
 #destinations,#amazon{top:calc(37% - 37svh)}#sahara{top:calc(62% - 62svh)}#canyon{top:calc(90% - 90svh)}
-/* The shared glass edges are traced in the perspective of the prototype. */
+/* Twelve pentagonal glass faces share their edges as the pavilion turns. */
 .pavilion-lift{position:absolute;inset:4% 1% 4% 31%;display:grid;place-items:center;transform:translateY(var(--lift));opacity:var(--object);pointer-events:none}
 .glass-shell{display:block;width:min(100%,79svh);height:100%;max-height:82svh;overflow:visible}
 .scene-notes{position:absolute;left:var(--gutter);bottom:15%;width:clamp(245px,32vw,520px);opacity:var(--note);z-index:1}

@@ -1,11 +1,11 @@
 ---
 import {assets} from '../lib/copy.js';
-import {panes,project} from '../lib/glass-shell.js';
+import {panes,project,shellViewBox} from '../lib/glass-shell.js';
 const {label}=Astro.props;
 const faces=panes.map((pane,i)=>({pane,i,...project(pane,0)})).sort((a,b)=>a.depth-b.depth);
 ---
 <div class="pavilion-lift">
-<svg class="glass-shell" viewBox="-38 -22 503 515" role="img" aria-label={label}>
+<svg class="glass-shell" viewBox={shellViewBox} role="img" aria-label={label}>
   <defs>
     <linearGradient id="pane-sheen" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#d6f9c2" stop-opacity=".29"/><stop offset=".48" stop-color="#bdd5b5" stop-opacity=".04"/><stop offset="1" stop-color="#0f2923" stop-opacity=".22"/></linearGradient>
     {faces.map(f=>f.pane.world&&<clipPath id={'shell-clip-'+f.i}><polygon data-clip={f.i} points={f.points}/></clipPath>)}
