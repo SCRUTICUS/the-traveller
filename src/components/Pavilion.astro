@@ -1,0 +1,21 @@
+---
+import { panels, projectPanel } from '../lib/pavilion.js';
+import { worlds,assets } from '../lib/copy.js';
+const {label}=Astro.props;
+const initial=panels.map(p=>projectPanel(p,0));
+---
+<svg class="pavilion" viewBox="0 0 640 550" role="img" aria-label={label}>
+<defs>
+  <radialGradient id="ground"><stop offset="0" stop-color="#242d27" stop-opacity=".34"/><stop offset=".68" stop-color="#394036" stop-opacity=".12"/><stop offset="1" stop-color="#394036" stop-opacity="0"/></radialGradient>
+  <linearGradient id="glass-reflection" x1="0" x2=".82" y1="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#eef5de" stop-opacity=".27"/><stop offset=".38" stop-color="#b3d4c7" stop-opacity=".035"/><stop offset=".39" stop-color="#182b2d" stop-opacity=".12"/><stop offset=".8" stop-color="#172d33" stop-opacity=".05"/><stop offset="1" stop-color="#a4c0ac" stop-opacity=".19"/></linearGradient>
+  {panels.map((p,i)=>p.window>=0 && <clipPath id={'pane-'+i}><polygon data-clip={i} points={initial[i].coords}/></clipPath>)}
+</defs>
+<ellipse cx="320" cy="510" rx="200" ry="21" fill="url(#ground)" class="ground-shadow"/>
+<g class="facets">{panels.map((p,i)=><g data-pane={i} visibility={initial[i].visible?'visible':'hidden'}>
+  <polygon class="surface" points={initial[i].coords} fill={initial[i].glass}/>
+  {p.window>=0 && <g clip-path={'url(#pane-'+i+')'}><image href={assets(worlds[p.window]+'.jpg')} x="-1.48" y="-1.48" width="2.96" height="2.96" preserveAspectRatio="xMidYMid slice" transform={initial[i].transform} opacity={initial[i].opacity*.72}/></g>}
+  <polygon class="reflection" points={initial[i].coords} fill="url(#glass-reflection)" stroke="#1b2d2c" stroke-width="2.5" stroke-linejoin="round"/>
+  <polygon class="rim" points={initial[i].coords} fill="none" stroke="#b5c6b6" stroke-opacity=".47" stroke-width=".7" stroke-linejoin="round"/>
+</g>)}</g>
+<g fill="none" stroke="#bbd1c4" stroke-width="1.2" opacity=".13">{panels.map((_,i)=><polygon data-inner-edge={i} visibility={initial[i].visible?'hidden':'visible'} points={initial[i].coords}/>)}</g>
+</svg>

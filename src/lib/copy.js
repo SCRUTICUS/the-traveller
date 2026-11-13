@@ -6,7 +6,6 @@ export const route = (lang, page = 'home') => {
   return base + '/' + (lang === 'nl' ? '' : lang + '/') + (page === 'book' ? booking[lang] + '/' : '');
 };
 export const worlds = ['sahara', 'amazon', 'canyon'];
-export const heroes = ['pavilion.jpg', 'pavilion-amazon.jpg', 'pavilion-canyon.jpg'];
 export const cities = ['gent', 'brussel', 'antwerpen'];
 export const prices = {30: 13, 60: 22};
 export const content = {

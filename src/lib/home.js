@@ -1,99 +1,107 @@
-const config = JSON.parse(document.querySelector('#scene-config').textContent);
-const scenes = [...document.querySelectorAll('.hero-view')];
-let active = 0;
-function changeScene(step) {
-  active = (active + step + scenes.length) % scenes.length;
-  document.querySelector('[data-hero-book]').href = config.booking + '?world=' + config.worlds[active];
-  scenes[active].style.backgroundImage = 'url("' + scenes[active].dataset.src + '")';
-  scenes.forEach((view, index) => view.classList.toggle('active', index === active));
-  document.querySelector('[data-name]').textContent = config.names[active];
-  document.querySelector('[data-count]').textContent = '0' + (active + 1) + ' / 03';
-}
-document.querySelector('[data-prev]').addEventListener('click', () => changeScene(-1));
-document.querySelector('[data-next]').addEventListener('click', () => changeScene(1));
+import { panels, projectPanel, chapterAngles } from './pavilion.js';
 
-// Project three hexagonal rings to make the sloped roof and six glass walls.
-const model = document.querySelector('[data-model]');
-const canvas = model.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-const buttons = [...model.querySelectorAll('button')];
-const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-const step = Math.PI / 3;
-let angle = 0, target = 0, spin = 0, drift = 0, frame = 0, width = 0, height = 0;
-let isVisible = false, textures = [];
-function point(index, radius, y) {
-  const a = index * step - Math.PI / 6 + angle + drift;
-  const x = Math.sin(a) * radius, z = Math.cos(a) * radius;
-  return [width / 2 + x * spin, height * 0.55 + (y * 0.94 + z * 0.32) * spin, z];
-}
-function path(points) {
-  ctx.beginPath();
-  points.forEach(([x,y], i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y)); ctx.closePath();
-}
-function paint(points, fill, stroke) {
-  path(points); ctx.fillStyle = fill; ctx.fill();
-  if (stroke) {ctx.strokeStyle = stroke; ctx.lineWidth = 1.4; ctx.stroke();}
-}
-function draw() {
-  frame = 0;
-  if (!width || !ctx) return;
-  angle += (target-angle)*(reduce.matches ? 1 : 0.115);
-  if (Math.abs(angle-target)<0.001) angle=target;
-  ctx.clearRect(0,0,width,height);
-  const ground = ctx.createRadialGradient(width/2,height*.85,0,width/2,height*.85,width*.37);
-  ground.addColorStop(0,'rgba(0,0,0,.7)');ground.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.save();ctx.translate(0,height*.85);ctx.scale(1,.16);ctx.translate(0,-height*.85);
-  ctx.fillStyle=ground;ctx.fillRect(0,-height*3,width,height*8);ctx.restore();
-  const faces = Array.from({length:6},(_,i)=>{
-    const j=(i+1)%6, top=[point(i,.65,-.59),point(j,.65,-.59)], belt=[point(i,1,-.24),point(j,1,-.24)], bottom=[point(i,.93,.51),point(j,.93,.51)];
-    return {i,z:(belt[0][2]+belt[1][2])/2,roof:[...top,belt[1],belt[0]],wall:[...belt,bottom[1],bottom[0]]};
-  }).sort((a,b)=>a.z-b.z);
-  for(const {i,z,wall,roof} of faces) {
-    paint(wall,'#26312e','#566254');
-    const img=textures[i%3];
-    if(img?.complete && img.naturalWidth) {
-      const [a,b,,d]=wall;
-      // Map the photograph to a pane, clipping the lower bevel at its frame.
-      ctx.save();path(wall);ctx.clip();
-      ctx.transform(b[0]-a[0],b[1]-a[1],d[0]-a[0],d[1]-a[1],a[0],a[1]);
-      const sw=Math.min(img.naturalWidth,img.naturalHeight*1.35), sh=img.naturalHeight;
-      ctx.drawImage(img,(img.naturalWidth-sw)/2,0,sw,sh,-.12,0,1.24,1.04);ctx.restore();
+const journey=document.querySelector('[data-journey]');
+const frame=journey.querySelector('.journey-frame');
+const chapters=[...journey.querySelectorAll('[data-chapter]')];
+const links=[...journey.querySelectorAll('[data-go]')];
+const landscape=[...journey.querySelectorAll('.horizon img')];
+const places=JSON.parse(document.querySelector('#plate-places').textContent);
+const graphic=journey.querySelector('.pavilion');
+const place=journey.querySelector('[data-place]');
+const reduced=matchMedia('(prefers-reduced-motion: reduce), (max-height: 540px)');
+const stops=[0,.32,.62,.92];
+const hashes=['#main','#destinations','#amazon','#canyon'];
+const nodes=[...graphic.querySelectorAll('[data-pane]')].map((group,i)=>({
+  group, surface:group.querySelector('.surface'), lines:group.querySelectorAll('.reflection,.rim'),
+  image:group.querySelector('image'), clip:graphic.querySelector('[data-clip="'+i+'"]'),
+  internalEdge:graphic.querySelector('[data-inner-edge="'+i+'"]')
+}));
+let start=0, travel=0, frameRequest=0, active=-1, lastAngle=null;
+const clamp=v=>Math.min(1,Math.max(0,v));
+function paint(angle, reveal){
+  if(lastAngle===angle) return;
+  lastAngle=angle;
+  panels.forEach((panel,i)=>{
+    const view=projectPanel(panel,angle), node=nodes[i];
+    node.group.setAttribute('visibility',view.visible?'visible':'hidden');
+    node.internalEdge.setAttribute('visibility',view.visible?'hidden':'visible');
+    if(!view.visible) {
+      node.internalEdge.setAttribute('points',view.coords);
+      return;
     }
-    const glass=ctx.createLinearGradient(wall[0][0],wall[0][1],wall[2][0]+1,wall[2][1]);
-    glass.addColorStop(0,'rgba(180,207,186,.25)');glass.addColorStop(.35,'rgba(7,18,14,.20)');glass.addColorStop(1,'rgba(3,10,8,'+(z>.7?.32:.62)+')');
-    paint(wall,glass,'#929a82');paint(roof,z>.6?'#39453e':'#28332e','#788174');
+    node.surface.setAttribute('points',view.coords);
+    node.surface.setAttribute('fill',view.glass);
+    node.lines.forEach(line=>line.setAttribute('points',view.coords));
+    if(node.image){
+      node.clip.setAttribute('points',view.coords);
+      node.image.setAttribute('transform',view.transform);
+      node.image.setAttribute('opacity',view.opacity*(.65+.35*reveal));
+    }
+  });
+}
+function activate(index){
+  if(active===index) return;
+  const previous=active;
+  active=index;
+  chapters.forEach((el,i)=>el.hidden=i!==index);
+  links.filter(link=>link.closest('.route-index')).forEach(link=>{
+    if(+link.dataset.go===index) link.setAttribute('aria-current','step');
+    else link.removeAttribute('aria-current');
+  });
+  const world=Math.max(0,index-1);
+  landscape.forEach((img,i)=>img.classList.toggle('selected',i===world));
+  place.textContent=places[world];
+  if(previous>=0 && !reduced.matches) chapters[index].animate(
+    [{opacity:.25,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],
+    {duration:160,easing:'ease-out'}
+  );
+}
+function render(){
+  frameRequest=0;
+  if(reduced.matches){
+    const index=Math.max(0,active);
+    activate(index);paint(chapterAngles[index],index?1:0);
+    graphic.style.removeProperty('transform');
+    return;
   }
-  paint(Array.from({length:6},(_,i)=>point(i,.65,-.59)),'#414b44','#8a9384');
-  if(angle!==target) schedule();
+  const progress=clamp((scrollY-start)/Math.max(1,travel));
+  let right=stops.findIndex(s=>s>progress);
+  if(right<0) right=stops.length-1;
+  const left=Math.max(0,right-1);
+  const mix=clamp((progress-stops[left])/(stops[right]-stops[left]||1));
+  const eased=mix*mix*(3-2*mix);
+  const angle=chapterAngles[left]+(chapterAngles[right]-chapterAngles[left])*eased;
+  activate(mix>=.5?right:left);
+  paint(angle,clamp(progress/stops[1]));
+  const enter=clamp(progress/stops[1]);
+  graphic.style.transform='translateY('+(-enter*3)+'%) scale('+(1+enter*.07)+')';
 }
-function schedule(){ if(!frame) frame=requestAnimationFrame(draw); }
-function resize(){
-  const box=canvas.getBoundingClientRect(); width=box.width; height=box.height;
-  const dpr=Math.min(devicePixelRatio||1,2);
-  canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
-  spin=Math.min(width*.37,height*.63); schedule();
+function schedule(){
+  if(!frameRequest) frameRequest=requestAnimationFrame(render);
 }
-function selectFace(i){
-  const nearest=Math.round(-angle/step);
-  const delta=((i-nearest)%3+3)%3;
-  target=-(nearest+(delta===2?-1:delta))*step;
-  model.querySelector('[data-model-book]').href = config.booking + '?world=' + config.worlds[i];
-  model.querySelector('[data-model-name]').textContent=config.names[i];
-  model.querySelector('[data-model-feel]').textContent=config.senses[i];
-  buttons.forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j))); schedule();
+function measure(){
+  start=journey.getBoundingClientRect().top+scrollY;
+  travel=journey.offsetHeight-frame.offsetHeight;
+  lastAngle=null;
+  render();
 }
-buttons.forEach((b,i)=>b.addEventListener('click',()=>selectFace(i)));
-function onScroll() {
-  if(!isVisible) return;
-  const rect=model.getBoundingClientRect();
-  drift=reduce.matches?0:Math.max(-.22,Math.min(.22,(innerHeight*.5-rect.top-rect.height*.5)/innerHeight*.45));schedule();
+function go(index,behavior){
+  if(reduced.matches){
+    activate(index);lastAngle=null;render();
+    window.scrollTo({top:index===0?0:start,behavior:'instant'});return;
+  }
+  window.scrollTo({top:index===0?0:start+travel*stops[index],behavior});
 }
-if(ctx){
-  new ResizeObserver(resize).observe(canvas);
-  new IntersectionObserver(([entry])=>{
-    isVisible=entry.isIntersecting;
-    if(isVisible && !textures.length) textures=config.textures.map(src=>{const img=new Image();img.onload=schedule;img.src=src;return img;});
-    onScroll();
-  },{rootMargin:'150px'}).observe(model);
-  window.addEventListener('scroll',onScroll,{passive:true});reduce.addEventListener('change',onScroll);
-}
+links.forEach(link=>link.addEventListener('click',event=>{
+  if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey) return;
+  event.preventDefault();
+  const index=Number(link.dataset.go);
+  history.replaceState(null,'',location.pathname+location.search+hashes[index]);
+  go(index,'instant');
+}));
+const fromHash=()=>{const i=hashes.indexOf(location.hash);if(i>=0) go(i,'instant');};
+window.addEventListener('hashchange',fromHash);
+window.addEventListener('scroll',schedule,{passive:true});
+new ResizeObserver(measure).observe(frame);
+reduced.addEventListener('change',measure);
+measure();fromHash();

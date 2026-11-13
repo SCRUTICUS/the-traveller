@@ -18,4 +18,5 @@ const {lang}=Astro.props,t=content[lang];
 <section class="ticket-section" data-ticket hidden><div class="eyebrow"><i></i>{t.ticket}</div><h1 tabindex="-1" data-ticket-title>{t.ticketTitle}</h1><p>{t.demoTicket}</p><article class="ticket"><img data-preview alt={t.ticketAlt}/><div class="ticket-info"><div class="brand"><Mark size={27}/>The Traveller</div><h2 data-world></h2><dl><div><dt>{t.city}</dt><dd data-city></dd></div><div><dt>{t.duration}</dt><dd data-duration></dd></div><div><dt>{t.day}</dt><dd data-day></dd></div><div><dt>{t.time}</dt><dd data-time></dd></div><div><dt>{t.total}</dt><dd data-price></dd></div></dl></div></article><button class="pill ghost" type="button" data-edit>{t.change}<Icon name="right" size={16}/></button></section>
 <script id="booking-config" type="application/json" set:html={JSON.stringify({worlds,cities,prices,names:t.names,cityNames:t.citiesLabel,locale:t.locale,min:t.min,images:worlds.map(w=>assets(w+'.jpg'))})}/>
 <script>import '../lib/booking.js';</script>
+<a class="book-credits" href={route(lang)+'#photography'}>{({nl:'Fotografie',en:'Photography',fr:'Photographies'})[lang]}</a>
 </main></Base>
