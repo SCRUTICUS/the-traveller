@@ -1,21 +1,20 @@
 ---
-import {assets,worlds} from '../lib/copy.js';
-const {names,label}=Astro.props;
-// Adjacent destinations alternate between the three featured worlds and the other walks.
-const faces=['amazon','glacier','sahara','bamboo','canyon','alps'];
+import {assets} from '../lib/copy.js';
+import {panes,project} from '../lib/glass-shell.js';
+const {label}=Astro.props;
+const faces=panes.map((pane,i)=>({pane,i,...project(pane,0)})).sort((a,b)=>a.depth-b.depth);
 ---
-<div class="pavilion-lift" aria-hidden="true">
-  <div class="pavilion-camera">
-    <div class="rigid-pavilion" role="img" aria-label={label}>
-      <div class="prism-roof"><div class="roof-outline"></div></div>
-      {faces.map((id,index)=><div class="prism-wall" style={'--side:'+index}>
-        <div class="pane-frame"><div class="pane-window">
-          <img src={assets(id+'.jpg')} alt="" decoding="async"/>
-          <div class="pane-light"></div>
-        </div></div>
-        <div class="pane-name">{names[worlds.indexOf(id)]}</div>
-      </div>)}
-      <div class="prism-base"></div>
-    </div>
-  </div>
+<div class="pavilion-lift">
+<svg class="glass-shell" viewBox="-38 -22 503 515" role="img" aria-label={label}>
+  <defs>
+    <linearGradient id="pane-sheen" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#d6f9c2" stop-opacity=".29"/><stop offset=".48" stop-color="#bdd5b5" stop-opacity=".04"/><stop offset="1" stop-color="#0f2923" stop-opacity=".22"/></linearGradient>
+    {faces.map(f=>f.pane.world&&<clipPath id={'shell-clip-'+f.i}><polygon data-clip={f.i} points={f.points}/></clipPath>)}
+  </defs>
+  <g class="shell-panes">{faces.map(({pane,i,points,front})=><g data-panel={i} opacity={front?1:.42}>
+    <polygon class="glass-color" points={points} fill={pane.tone} fill-opacity={front?.70:.32}/>
+    {pane.world&&<g clip-path={'url(#shell-clip-'+i+')'}><image href={assets(pane.world+'.jpg')} x="-35" y="-25" width="500" height="520" preserveAspectRatio="xMidYMid slice" opacity={front?.37:0}/></g>}
+    <polygon class="glass-seam" points={points} fill="url(#pane-sheen)" stroke="#152c23" stroke-width={front?3.4:2.4} stroke-linejoin="round"/>
+    <polygon class="glass-rim" points={points} fill="none" stroke="#bdce9b" stroke-opacity=".34" stroke-width=".8"/>
+  </g>)}</g>
+</svg>
 </div>

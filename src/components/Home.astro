@@ -24,7 +24,7 @@ const featured=['amazon','sahara','canyon'];
       </div>
       <span class="origin">{e.cities}</span>
     </div>
-    <Pavilion names={t.names} label={e.screen}/>
+    <Pavilion label={e.screen}/>
     <div class="scene-notes">
       {featured.map((id,i)=><article data-feature={i} hidden><p class="series">{t.regions[worlds.indexOf(id)]}</p><h2>{t.names[worlds.indexOf(id)]}</h2><p>{e.scenes[i]}</p><a href={booking+'?world='+id}>{t.pick} <Icon name="diagonal" size={14}/></a></article>)}
     </div>

@@ -17,6 +17,18 @@ const title=page==='home' ? 'The Traveller — '+t.label : t.book+' · The Trave
 <!doctype html>
 <html lang={lang}><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#141510"/><meta name="description" content={page === 'home' ? t.intro : t.demoNotice}/><link rel="icon" href={assets('favicon.svg')}/><title>{title}</title>
 {locales.map(l=><link rel="alternate" hreflang={l} href={new URL(route(l,page),Astro.site)}/>)}
+<script is:inline define:vars={{pageLanguage:lang,dutchPath:route('nl',page)}}>
+  // A direct visit in a new tab starts in Dutch. A deliberate language choice
+  // applies to the rest of this tab, including booking details and reloads.
+  try {
+    const chosen=sessionStorage.getItem('traveller-language');
+    if(pageLanguage!=='nl' && chosen!==pageLanguage) {
+      location.replace(dutchPath+location.search+location.hash);
+    } else if(pageLanguage==='nl') {
+      sessionStorage.removeItem('traveller-language');
+    }
+  } catch { /* Explicit language URLs still work if browser storage is disabled. */ }
+</script>
 </head><body class={page}>
 <a class="skip" href="#main">{t.skip}</a>
 <header class="top"><div class="top-inner">
@@ -36,6 +48,7 @@ for (const menu of menus) {
 document.addEventListener('click', event => menus.forEach(menu=>{if (!menu.contains(event.target) || event.target.closest('a')) menu.open=false;}));
 document.addEventListener('keydown', event=>{if(event.key==='Escape') for(const menu of menus) if(menu.open){menu.open=false;menu.querySelector('summary').focus();}});
 document.querySelectorAll('.lang-link').forEach(link=>link.addEventListener('click',()=>{
+  try { sessionStorage.setItem('traveller-language',link.hreflang); } catch {}
   const url=new URL(link.href); url.search=location.search; url.hash=location.hash; link.href=url.href;
 }));
 </script>

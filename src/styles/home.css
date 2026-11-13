@@ -6,7 +6,7 @@ html,body{background:var(--night);color:var(--bone)}
 .top .brand{font-size:21px}.top .brand svg,.foot-inner .brand svg{color:var(--accent)}
 .desktop-nav{color:#e7eade}.nav-book{border-color:#a7b39f;color:var(--bone);border-radius:3px}
 .expedition{position:relative;height:510svh;background:#08110e}
-.cinema{position:sticky;top:0;isolation:isolate;width:100%;height:100svh;overflow:hidden;--intro:1;--shift:0px;--forest:.38;--forest-y:50%;--sand:0;--canyon:0;--lift:110vh;--yaw:-13deg;--object:0;--note:0;--exit:0}
+.cinema{position:sticky;top:0;isolation:isolate;width:100%;height:100svh;overflow:hidden;--intro:1;--shift:0px;--forest:.38;--forest-y:50%;--sand:0;--canyon:0;--lift:110vh;--object:0;--note:0;--exit:0}
 .landscapes,.film-shade,.title-screen,.scenery,.cinema-exit{position:absolute;inset:0;width:100%;height:100%}
 .landscapes{z-index:-4;background:#0a1710}
 .scenery{object-fit:cover;object-position:center;pointer-events:none}
@@ -25,23 +25,9 @@ html,body{background:var(--night);color:var(--bone)}
 .origin{position:absolute;bottom:5%;right:var(--gutter);font-size:11px;letter-spacing:.1em;color:#d8dfcb}
 .scene-anchor{position:absolute;left:0;width:1px;height:1px;pointer-events:none}
 #destinations,#amazon{top:calc(37% - 37svh)}#sahara{top:calc(62% - 62svh)}#canyon{top:calc(90% - 90svh)}
-/* Six rigid walls meet at an apothem of sqrt(3)/2 times the side length. */
-.pavilion-lift{--s:clamp(125px,min(23vw,37vh),420px);position:absolute;inset:7% 0 7% 28%;display:grid;place-items:center;transform:translateY(var(--lift));opacity:var(--object);pointer-events:none}
-.pavilion-camera{width:var(--s);height:calc(var(--s)*.97);perspective:calc(var(--s)*5.6);perspective-origin:50% 43%;position:relative}
-.rigid-pavilion{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-17deg) rotateY(var(--yaw))}
-.prism-wall,.prism-roof,.prism-base{position:absolute;backface-visibility:hidden}
-.prism-wall{inset:0;transform:rotateY(calc(var(--side)*60deg)) translateZ(calc(var(--s)*.8660254));background:linear-gradient(125deg,#3c4b4c,#142625 24%,#17292b 70%,#3c4e4e);box-shadow:inset 0 0 0 2px #121d1e,inset 0 0 0 4px #738382;overflow:hidden}
-.pane-frame,.pane-window{position:absolute;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
-.pane-frame{inset:5% 2.5% 10%;background:linear-gradient(155deg,#bdcdca,#263b3d 40%,#8fa09f)}
-.pane-window{inset:2px;background:#0c1b1a}
-.pane-window img,.pane-light{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.pane-window img{filter:saturate(.81) brightness(.82)}
-.pane-light{background:linear-gradient(122deg,#cde6ec38 0%,#c5e1e116 21%,transparent 21.3%,transparent 58%,#293d4160 100%),linear-gradient(0deg,#09191d53,transparent 30%)}
-.pane-name{position:absolute;left:6%;bottom:2.3%;font-size:clamp(8px,calc(var(--s)*.034),14px);color:#e0e7de;letter-spacing:.055em}
-.prism-roof,.prism-base{width:calc(var(--s)*2);height:calc(var(--s)*1.73205);left:50%;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
-.prism-roof{top:0;transform:translate(-50%,-50%) rotateX(90deg);background:conic-gradient(from 0deg at 50% 50%,#718483 0deg 60deg,#556968 60deg 120deg,#405758 120deg 180deg,#617573 180deg 240deg,#879592 240deg 300deg,#667b79 300deg)}
-.roof-outline{position:absolute;inset:8%;clip-path:inherit;background:linear-gradient(160deg,#314948,#465e5a 49%,#3c5353 50%,#283e41);opacity:.85}
-.prism-base{bottom:0;transform:translate(-50%,50%) rotateX(-90deg);background:#1c302c}
+/* The shared glass edges are traced in the perspective of the prototype. */
+.pavilion-lift{position:absolute;inset:4% 1% 4% 31%;display:grid;place-items:center;transform:translateY(var(--lift));opacity:var(--object);pointer-events:none}
+.glass-shell{display:block;width:min(100%,79svh);height:100%;max-height:82svh;overflow:visible}
 .scene-notes{position:absolute;left:var(--gutter);bottom:15%;width:clamp(245px,32vw,520px);opacity:var(--note);z-index:1}
 .scene-notes h2,.inside-copy h2,.locations-band h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;line-height:.94;letter-spacing:-.028em}
 .scene-notes h2{font-size:clamp(47px,5.6vw,100px);margin:7px 0 12px}
@@ -73,7 +59,7 @@ html,body{background:var(--night);color:var(--bone)}
   .masthead{font-size:clamp(80px,21vw,142px)}.masthead span{font-size:.58em}
   .question{max-width:22ch;font-size:21px;margin:22px 0 14px}.series{font-size:10px}
   .origin{left:7%;right:auto;bottom:7%}
-  .pavilion-lift{--s:clamp(112px,min(34vw,29svh),215px);inset:10% 0 26%}
+  .pavilion-lift{inset:3% 5% 30%}
   .scene-notes{bottom:10%;width:86%}.scene-notes h2{font-size:clamp(46px,11vw,70px)}
   .inside-exp,.location-layout{grid-template-columns:1fr;gap:28px}
   .inside-exp{padding-block:48px}.inside-copy h2,.locations-band h2{margin-bottom:12px}
@@ -82,7 +68,7 @@ html,body{background:var(--night);color:var(--bone)}
   .expedition{height:auto}.cinema{height:auto;position:relative;display:grid;grid-template-columns:1fr}
   .title-screen{height:100svh;min-height:370px;position:relative;transform:none;opacity:1}
   .landscapes{opacity:.9}.scene-0{opacity:.65}
-  .pavilion-lift{position:relative;inset:auto;transform:none;opacity:1;height:clamp(220px,42vw,500px);--s:clamp(120px,23vw,300px)}
+  .pavilion-lift{position:relative;inset:auto;transform:none;opacity:1;height:clamp(220px,42vw,500px);padding:8px}
   .scene-notes{position:relative;inset:auto;opacity:1;margin:0 var(--gutter) 50px}
   #destinations,#amazon,#sahara,#canyon{top:100svh}
 }
