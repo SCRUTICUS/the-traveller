@@ -5,7 +5,7 @@ export const route = (lang, page = 'home') => {
   const booking = { nl: 'boeken', en: 'book', fr: 'reserver' };
   return base + '/' + (lang === 'nl' ? '' : lang + '/') + (page === 'book' ? booking[lang] + '/' : '');
 };
-export const worlds = ['sahara', 'amazon', 'canyon'];
+export const worlds = ['sahara', 'amazon', 'canyon', 'glacier', 'alps', 'bamboo'];
 export const cities = ['gent', 'brussel', 'antwerpen'];
 export const prices = {30: 13, 60: 22};
 export const content = {
@@ -13,7 +13,7 @@ export const content = {
   nav: ['Bestemmingen', 'De ervaring', 'Locaties'], book: 'Boek een wandeling', explore: 'Ontdek de bestemmingen', menu: 'Menu', close: 'Sluiten', home: 'Startpagina', lang: 'Taal', skip: 'Naar de inhoud',
   label: 'Een zintuiglijke VR-ervaring', title: ['Waar brengt jouw', 'volgende wandeling je?'], intro: 'Stap binnen in ons glazen paviljoen. Wandel door een andere wereld met een VR-bril op en voel de wind en de nevel op je huid.',
   slide: 'Volgende bestemming', prev: 'Vorige bestemming', scene: 'In beeld', places: 'Onze bestemmingen', where: 'Kies je', whereEm: 'bestemming.', chooser: 'Drie landschappen. Kies er één voor jouw wandeling.', pick: 'Boek deze wandeling',
-  names: ['De Sahara', 'Het Amazonewoud', 'De Grand Canyon'], regions: ['Noord-Afrika', 'Zuid-Amerika', 'Arizona, VS'], terrain: ['Zandduinen', 'Regenwoud', 'Canyon'],
+  names: ['De Sahara', 'Het Amazonewoud', 'De Grand Canyon', 'De IJslandse ijsgrot', 'De Dolomieten', 'Het bamboebos van Kyoto'], regions: ['Noord-Afrika', 'Zuid-Amerika', 'Arizona, VS'], terrain: ['Zandduinen', 'Regenwoud', 'Canyon'],
   descriptions: ['Volg de kam van een zandduin terwijl de wind fijne korrels over het zand blaast.', 'Loop onder het bladerdak, langs lianen en door een koele nevel.', 'Wandel langs de rand en kijk uit over lagen rode rots, diep in de kloof.'],
   sensations: ['Wind over de duinen', 'Nevel onder het bladerdak', 'Een bries langs de rotswand'],
   experience: 'De ervaring', inside: 'Binnen in', insideEm: 'het paviljoen.', how: 'Achter het donkere glas begint je wandeling. Kies een landschap en bekijk de bijbehorende zijde van het paviljoen.',
@@ -25,7 +25,7 @@ export const content = {
   nav: ['Destinations', 'The experience', 'Locations'], book: 'Book a walk', explore: 'Explore destinations', menu: 'Menu', close: 'Close', home: 'Home', lang: 'Language', skip: 'Skip to content',
   label: 'A sensory VR experience', title: ['Where will your', 'next walk take you?'], intro: 'Step inside our glass pavilion and put on a VR headset. Walk through another world with wind and mist against your skin.',
   slide: 'Next destination', prev: 'Previous destination', scene: 'In view', places: 'Our destinations', where: 'Choose your', whereEm: 'destination.', chooser: 'Three landscapes. Pick one for your walk.', pick: 'Book this walk',
-  names: ['The Sahara', 'The Amazon rainforest', 'The Grand Canyon'], regions: ['North Africa', 'South America', 'Arizona, USA'], terrain: ['Sand dunes', 'Rainforest', 'Canyon'],
+  names: ['The Sahara', 'The Amazon rainforest', 'The Grand Canyon', 'Icelandic ice cave', 'The Dolomites', 'Kyoto bamboo forest'], regions: ['North Africa', 'South America', 'Arizona, USA'], terrain: ['Sand dunes', 'Rainforest', 'Canyon'],
   descriptions: ['Follow the crest of a dune as the wind brushes fine grains across the sand.', 'Walk beneath the canopy, past hanging vines and into a cool mist.', 'Follow the rim and look down at layers of red rock deep in the canyon.'],
   sensations: ['Wind across the dunes', 'Mist beneath the canopy', 'A breeze along the cliffs'],
   experience: 'The experience', inside: 'Inside the', insideEm: 'pavilion.', how: 'Your walk begins behind smoked glass. Choose a landscape to see its face of the pavilion.',
@@ -37,7 +37,7 @@ export const content = {
   nav: ['Destinations', 'L’expérience', 'Nos villes'], book: 'Réserver une balade', explore: 'Voir les destinations', menu: 'Menu', close: 'Fermer', home: 'Accueil', lang: 'Langue', skip: 'Aller au contenu',
   label: 'Une expérience VR sensorielle', title: ['Où vous mènera', 'votre prochaine balade ?'], intro: 'Entrez dans notre pavillon de verre et enfilez un casque de réalité virtuelle. À chaque pas, sentez le vent et la brume sur votre peau.',
   slide: 'Destination suivante', prev: 'Destination précédente', scene: 'À l’image', places: 'Nos destinations', where: 'Choisissez votre', whereEm: 'destination.', chooser: 'Trois paysages. À vous de choisir celui de votre balade.', pick: 'Réserver cette balade',
-  names: ['Le Sahara', 'La forêt amazonienne', 'Le Grand Canyon'], regions: ['Afrique du Nord', 'Amérique du Sud', 'Arizona, États-Unis'], terrain: ['Dunes de sable', 'Forêt tropicale', 'Canyon'],
+  names: ['Le Sahara', 'La forêt amazonienne', 'Le Grand Canyon', 'La grotte de glace islandaise', 'Les Dolomites', 'La bambouseraie de Kyoto'], regions: ['Afrique du Nord', 'Amérique du Sud', 'Arizona, États-Unis'], terrain: ['Dunes de sable', 'Forêt tropicale', 'Canyon'],
   descriptions: ['Suivez la crête d’une dune pendant que le vent soulève le sable fin.', 'Marchez sous la canopée, entre les lianes et les nappes de brume fraîche.', 'Longez le bord du canyon et admirez les strates de roche rouge en contrebas.'],
   sensations: ['Le vent sur les dunes', 'La brume sous la canopée', 'La brise le long des falaises'],
   experience: 'L’expérience', inside: 'À l’intérieur', insideEm: 'du pavillon.', how: 'La balade commence derrière les vitres fumées. Choisissez un paysage pour découvrir la facette du pavillon qui lui correspond.',

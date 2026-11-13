@@ -2,50 +2,42 @@
 import Base from '../layouts/Base.astro';
 import Icon from './Icon.astro';
 import Pavilion from './Pavilion.astro';
-import { content, worlds, cities, route, assets } from '../lib/copy.js';
-import { edition } from '../lib/edition.js';
-import { photoCredits } from '../lib/photo-credits.js';
+import {content,worlds,cities,route,assets} from '../lib/copy.js';
+import {edition} from '../lib/edition.js';
+import {photoCredits} from '../lib/photo-credits.js';
 const {lang}=Astro.props, t=content[lang], e=edition[lang], booking=route(lang,'book');
-const labels=[e.shell,...e.walks];
+const featured=['amazon','sahara','canyon'];
 ---
 <Base lang={lang}><main id="main">
-<section class="journey" data-journey aria-label={t.nav[0]}>
-  <div class="journey-frame">
-    <div class="journey-spread wrap">
-      <div class="field-copy">
-        <div class="chapter opening" data-chapter="0">
-          <p class="folio"><span class="locator"></span>{e.type}</p>
-          <h1>{t.title[0]} {t.title[1]}</h1>
-          <p class="field-description">{e.intro}</p>
-          <div class="field-links"><a class="ink-button" href={booking}>{t.book}<Icon name="diagonal" size={15}/></a><a class="scroll-invite" data-go="1" href="#destinations"><Icon name="down" size={14}/>{e.explore}</a></div>
-        </div>
-        {worlds.map((world,i)=><article class="chapter" data-chapter={i+1} hidden>
-          <p class="folio"><span class="locator"></span>{t.regions[i]} <span class="slash">/</span> {t.terrain[i]}</p>
-          <h2>{e.walks[i]}</h2>
-          <p class="field-description">{e.scenes[i]}</p>
-          <a class="ink-button" href={booking+'?world='+world} aria-label={t.pick+' · '+e.walks[i]}>{t.pick}<Icon name="diagonal" size={15}/></a>
-        </article>)}
-      </div>
-      <figure class="model-plate">
-        <div class="horizon">{worlds.map((world,i)=><img class={i===0?'selected':''} src={assets(world+'.jpg')} alt="" decoding="async"/>)}</div>
-        <Pavilion label={t.model}/>
-        <figcaption><span class="plot-mark" aria-hidden="true">＋</span><span data-place>{photoCredits[0].place}</span></figcaption>
-      </figure>
-      <nav class="route-index" aria-label={t.nav[0]}>{labels.map((label,i)=><a href={i===0?'#main':'#'+(i===1?'destinations':worlds[i-1])} aria-current={i===0?'step':undefined} data-go={i}><span class="index-line"></span>{label}</a>)}</nav>
+<section class="expedition" data-expedition aria-label="The Traveller">
+  <div class="cinema">
+    <div class="landscapes" aria-hidden="true">
+      {['forest','sahara','canyon'].map((file,i)=><img src={assets(file+'.jpg')} class={'scenery scene-'+i} alt="" decoding="async" fetchpriority={i===0?'high':'auto'}/>)}
     </div>
+    <div class="film-shade"></div>
+    <div class="title-screen">
+      <div class="opening-copy">
+        <p class="series">{e.type}</p>
+        <h1 class="masthead"><span>The</span><strong>Traveller</strong></h1>
+        <p class="question">{t.title.join(' ')}</p>
+        <a class="opening-link" href="#destinations">{e.enter}<Icon name="down" size={16}/></a>
+      </div>
+      <span class="origin">{e.cities}</span>
+    </div>
+    <Pavilion names={t.names} label={e.screen}/>
+    <div class="scene-notes">
+      {featured.map((id,i)=><article data-feature={i} hidden><p class="series">{t.regions[worlds.indexOf(id)]}</p><h2>{t.names[worlds.indexOf(id)]}</h2><p>{e.scenes[i]}</p><a href={booking+'?world='+id}>{t.pick} <Icon name="diagonal" size={14}/></a></article>)}
+    </div>
+    <div class="cinema-exit" aria-hidden="true"></div>
   </div>
-  <div class="stops" aria-hidden="true"><span id="destinations"></span><span id="amazon"></span><span id="canyon"></span></div>
+  <span class="scene-anchor" id="destinations" aria-hidden="true"></span>
+  <span class="scene-anchor" id="amazon" aria-hidden="true"></span><span class="scene-anchor" id="sahara" aria-hidden="true"></span><span class="scene-anchor" id="canyon" aria-hidden="true"></span>
 </section>
-<noscript><style is:inline>.journey{height:auto!important}.journey-frame{position:relative!important}.route-index,.scroll-invite{display:none!important}</style><div class="wrap fallback-worlds">{worlds.map((w,i)=><a href={booking+'?world='+w}>{t.pick} · {e.walks[i]}</a>)}</div></noscript>
-<section id="experience" class="paper-section wrap">
-  <div class="experience-heading"><h2>{e.inside}</h2><p>{e.insideIntro}</p></div>
-  <div class="workbench">
-    <figure class="prototype"><img src={assets('prototype.png')} alt={e.original} loading="lazy"/><figcaption><strong>{e.original}</strong>{e.caption}</figcaption></figure>
-    <ol class="walk-steps">{t.steps.map(([title,body],i)=><li><span>0{i+1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol>
-  </div>
+<noscript><style is:inline>.expedition{height:auto}.cinema{position:relative}.opening-link{display:none}</style></noscript>
+<section id="experience" class="inside-exp wrap">
+  <div class="experience-picture"><img src={assets('interior.jpg')} loading="lazy" alt={t.steps[1][1]}/></div>
+  <div class="inside-copy"><p class="series">{t.experience}</p><h2>{e.inside}</h2><p>{e.intro}</p><a class="outline-action" href={booking}>{e.all}<Icon name="diagonal" size={15}/></a></div>
 </section>
-<section id="locations" class="visit"><div class="wrap visit-grid"><div><h2>{e.citiesTitle}</h2><p>{e.citiesInfo}</p><p class="rates">30 min / €13 <span>·</span> 60 min / €22</p></div><div class="city-list">{cities.map((city,i)=><a href={booking+'?city='+city} aria-label={t.cityLink+' '+t.citiesLabel[i]}>{t.citiesLabel[i]}<Icon name="diagonal" size={24}/></a>)}</div></div></section>
+<section id="locations" class="locations-band"><div class="wrap location-layout"><div><h2>{e.visit}</h2><p>{e.visitText}</p><p class="rates">30 min / €13 <span>·</span> 60 min / €22</p></div><div class="city-list">{cities.map((city,i)=><a href={booking+'?city='+city} aria-label={t.cityLink+' '+t.citiesLabel[i]}>{t.citiesLabel[i]}<Icon name="diagonal" size={22}/></a>)}</div></div></section>
 <details class="credits wrap" id="photography"><summary>{e.photos}</summary><ul>{photoCredits.map(c=><li><b>{c.place}</b> · <a href={c.source}>{c.author}</a> · <a href={c.licenseUrl}>{c.license}</a></li>)}</ul><small>{({nl:'Uitsnedes en verkleinde beelden van de originele foto’s.',en:'Photographs cropped and resized from the originals.',fr:'Photographies recadrées et redimensionnées.'})[lang]}</small></details>
-<script type="application/json" id="plate-places" set:html={JSON.stringify(photoCredits.map(c=>c.place))}/>
-<script>import '../lib/home.js';</script>
-</main></Base>
+<script>import '../lib/home.js';</script></main></Base>
